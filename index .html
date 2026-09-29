@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>FWA - Fruitful Wisdom Academy</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Inter,Arial,sans-serif}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow-x:hidden;
+background: radial-gradient(circle at 30% 30%, #0b7a3a 0%, #147a2e 15%, #7fb800 45%, #ffdd3c 75%, #ffb800 100%);}
+.leaf{position:absolute;font-size:26px;opacity:0.7;animation:fall 12s linear infinite;pointer-events:none}
+@keyframes fall{0%{transform:translateY(-10vh) rotate(0deg)}100%{transform:translateY(110vh) rotate(360deg)}}
+.card{background:#fff;width:100%;max-width:440px;border-radius:28px;padding:28px 26px 20px;box-shadow:0 20px 60px rgba(0,0,0,0.28);z-index:2;position:relative;text-align:center}
+.logo-wrap{display:flex;align-items:center;gap:12px;justify-content:center}
+.logo-img{width:72px;height:72px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;position:relative}
+.logo-img::before{content:"";position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(from 0deg,#1a7a1a,#8bc34a,#1a7a1a);z-index:-1}
+.logo-inner{width:60px;height:60px;background:#0e5a2b;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px}
+.brand{text-align:left}.brand h1{font-size:21px;color:#0d3d20;font-weight:900;line-height:1.15}
+.brand.motto{color:#2e7a3b;font-style:italic;font-weight:700;font-size:13px;margin-top:2px}.brand.addr{font-size:10px;color:#333;margin-top:2px}
+.divider{height:1px;background:#eee;margin:16px 0 14px}
+.card h2{font-size:26px;color:#0a3d1a;font-weight:800}.sub2{font-size:12.5px;color:#555;margin:4px 0 6px}
+.status{font-size:11px;color:#2e7a3b;font-weight:700;margin-bottom:10px}
+.login-btn{width:100%;display:flex;align-items:center;gap:12px;border:1.6px solid;border-radius:14px;padding:11px 14px;margin-bottom:11px;text-align:left;cursor:pointer;background:#fcfcfc}
+.login-btn.icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px}
+.login-btn b{display:block;font-size:14px;color:#111}.login-btn span{display:block;font-size:10.5px;color:#555;margin-top:1px;line-height:1.2}
+.admin{border-color:#f3b3b3}.admin.icon{background:#fde2e2}.teacher{border-color:#c7bfff}.teacher.icon{background:#ece8ff}.parent{border-color:#a9d8b8}.parent.icon{background:#dcf5e4}
+.foot{font-size:10.5px;color:#666;margin-top:14px}.foot a{color:#0a5a2a;text-decoration:none;font-weight:600}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.58);z-index:99;align-items:center;justify-content:center;padding:16px}.modal.active{display:flex}
+.modal-box{background:#fff;width:100%;max-width:410px;border-radius:20px;padding:22px;animation:pop.25s}@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.input{width:100%;padding:12px 14px;border:1.6px solid #ddd;border-radius:10px;margin:8px 0 12px;font-size:14px;outline:none}.input:focus{border-color:#0e7a3a}
+.btn{width:100%;padding:12px;background:#0e6a2e;color:#fff;border:none;border-radius:11px;font-weight:800;font-size:14px;cursor:pointer;margin-top:6px}.btn2{background:#eee;color:#333}
+.err{background:#fde2e2;color:#991b1b;padding:8px 10px;border-radius:8px;font-size:12px;margin-bottom:10px;display:none}.small{font-size:11px;color:#666;margin-top:8px}
+.dash{display:none;position:fixed;inset:0;background:#f5f7f5;z-index:100;overflow:auto;padding:16px}.dash.active{display:block}
+.top{background:#fff;padding:14px 16px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:14px;position:sticky;top:0;z-index:10}
+.badge{background:#dcfce7;color:#14532d;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.table{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05)}.table th,.table td{padding:10px 8px;border-bottom:1px solid #eee;text-align:left}.table th{background:#0e5a2b;color:#fff;font-size:11px}
+.report-wrap{max-width:800px;margin:0 auto;background:white;border:6px solid #0a4a2a;padding:0;box-shadow:0 10px 30px rgba(0,0,0,0.15)}
+.report-header{text-align:center;padding:14px 10px 6px}.report-header h1{font-size:28px;font-weight:900;color:#0a4a2a;line-height:1}.report-header.motto{font-style:italic;color:#0a4a2a;font-weight:600;font-size:14px;margin-top:2px}
+.report-banner{background:#0a4a2a;color:white;text-align:center;padding:8px 10px;font-weight:800;font-size:13px;margin:8px 10px 10px}
+.report-grid{display:flex;gap:10px;padding:0 10px 10px}
+.info-box{flex:1.2;border:1.5px solid #0a4a2a;border-radius:8px;overflow:hidden}.info-title{background:#f0f0f0;color:#0a4a2a;font-weight:800;text-align:center;padding:6px;font-size:13px;border-bottom:1.5px solid #0a4a2a}
+.info-table{width:100%;border-collapse:collapse;font-size:12px}.info-table td{border:1px solid #999;padding:5px 8px}.info-table td:first-child{font-weight:700;background:#f9f9f9;width:35%}
+.passport-box{flex:0.7;border:1.5px solid #0a4a2a;border-radius:8px;overflow:hidden;display:flex;flex-direction:column}.passport-title{text-align:center;font-weight:700;font-size:11px;padding:6px;background:#f0f0f0;border-bottom:1.5px solid #0a4a2a}
+.passport-img{flex:1;border:1.5px dashed #999;margin:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:140px;background:#fafafa;overflow:hidden;position:relative}
+.passport-img img{width:100%;height:100%;object-fit:cover}
+.cognitive-title{background:#0a4a2a;color:white;text-align:center;padding:7px;font-weight:800;font-size:13px;margin:0 10px}
+.cog-table{width:calc(100% - 20px);margin:8px 10px;border-collapse:collapse;font-size:11.5px}.cog-table th{background:#0a4a2a;color:white;padding:6px 4px;text-align:center;border:1px solid #0a4a2a}.cog-table td{border:1px solid #999;padding:5px 4px;text-align:center}.cog-table td:first-child{text-align:left;padding-left:6px;font-weight:600}
+.bottom-grid{display:flex;gap:0;margin:10px;border:1px solid #999}.bottom-left{flex:1;padding:10px;border-right:1px solid #999;font-size:12px;background:#fdfdf5}.bottom-right{flex:1;padding:10px;font-size:11px;line-height:1.4}
+.sig-grid{display:flex;justify-content:space-around;padding:18px 10px 8px;font-size:11px;text-align:center}
+.key{background:#0a4a2a;color:white;text-align:center;font-size:9.5px;padding:6px 4px;margin-top:6px}
+.footer{font-size:9px;text-align:center;padding:6px;color:#333;border-top:1px solid #999;background:#f9f9f9}
+</style></head><body>
+<span class="leaf" style="left:5%">🍃</span><span class="leaf" style="left:85%;animation-delay:1s">🍂</span>
+<div class="card" id="mainCard">
+<div class="logo-wrap"><div class="logo-img"><div class="logo-inner">FWA</div></div><div class="brand"><h1>FRUITFUL WISDOM<br>ACADEMY</h1><div class="motto">Go for Wisdom</div><div class="addr">No 1 Job Street Rumuapu Rukpokwu PH Rivers State</div></div></div>
+<div class="divider"></div><h2>Login to Portal</h2><p class="sub2">Choose your login type to continue</p><p class="status" id="excelStatus">Loading Excel...</p>
+<div class="login-btn admin" onclick="openModal('adminM')"><div class="icon">🛡️</div><div><b>ADMIN LOGIN</b><span>Access administrative controls & management</span></div></div>
+<div class="login-btn teacher" onclick="openModal('teacherM')"><div class="icon">🎓</div><div><b>TEACHER LOGIN</b><span>Access teaching materials & student records</span></div></div>
+<div class="login-btn parent" onclick="openModal('parentM')"><div class="icon">👨‍👧‍👦</div><div><b>PARENT LOGIN</b><span>View child progress & school updates</span></div></div>
+<div class="foot">Need help? Contact support • support@fruitfulwisdom.edu.ng</div>
+</div>
+<div class="modal" id="adminM"><div class="modal-box"><h3>Admin Login</h3><div class="err" id="adminErr"></div><input id="adminUser" class="input" placeholder="Username (admin)"><input id="adminPass" class="input" type="password" placeholder="Password"><button class="btn" onclick="loginAdmin()">Login</button><button class="btn btn2" onclick="closeModal('adminM')">Cancel</button></div></div>
+<div class="modal" id="teacherM"><div class="modal-box"><h3>Teacher Login</h3><div class="err" id="teacherErr"></div><select id="teacherName" class="input"></select><input id="teacherPin" class="input" type="password" placeholder="Login PIN"><button class="btn" onclick="loginTeacher()">Login</button><button class="btn btn2" onclick="closeModal('teacherM')">Cancel</button></div></div>
+<div class="modal" id="parentM"><div class="modal-box"><h3>Parent Login</h3><div class="err" id="parentErr"></div><input id="parentId" class="input" placeholder="Student ID e.g. FWA-B05-001"><input id="parentPass" class="input" type="password" placeholder="Parent Password"><button class="btn" onclick="loginParent()">View Result</button><button class="btn btn2" onclick="closeModal('parentM')">Cancel</button><div class="small">Test: FWA-B05-001 / 7TEH83QO</div></div></div>
+<div class="dash" id="adminDash"><div class="top"><b>Admin Dashboard</b><button class="btn" style="width:auto;padding:8px 14px" onclick="logout()">Logout</button></div><div id="adminContent"></div></div>
+<div class="dash" id="teacherDash"><div class="top"><b id="teacherTitle">Teacher</b><button class="btn" style="width:auto;padding:8px 14px" onclick="logout()">Logout</button></div><div id="teacherContent"></div></div>
+<div class="dash" id="parentDash"><div class="top"><b id="parentTitle">Report Card</b><div style="display:flex;gap:8px"><button class="btn" style="width:auto;padding:8px 14px;background:#0a4a2a" onclick="window.print()">🖨️ Print</button><button class="btn" style="width:auto;padding:8px 14px" onclick="logout()">Logout</button></div></div><div id="parentContent"></div></div>
+<script>
+let STUDENTS=[], TEACHERS=[], ADMINS=[], RESULTS=[], SUBJECTS=[], PHOTOS={};
+try{PHOTOS=JSON.parse(localStorage.getItem('FWA_PHOTOS')||'{}');}catch(e){PHOTOS={}}
+async function loadExcel(){
+ try{
+  let url='./FRUITFUL_WISDOM_ACADEMY_PORTAL_TEMPLATE.xlsx';
+  let res=await fetch(url); if(!res.ok) throw 'not found';
+  let buf=await res.arrayBuffer(); let wb=XLSX.read(buf,{type:'array'});
+  STUDENTS=XLSX.utils.sheet_to_json(wb.Sheets['Students']);
+  TEACHERS=XLSX.utils.sheet_to_json(wb.Sheets['Teachers']);
+  ADMINS=XLSX.utils.sheet_to_json(wb.Sheets['Admin']);
+  try{RESULTS=XLSX.utils.sheet_to_json(wb.Sheets['Results']||{});}catch(e){RESULTS=[]}
+  try{SUBJECTS=XLSX.utils.sheet_to_json(wb.Sheets['Subjects']||{});}catch(e){SUBJECTS=[]}
+  document.getElementById('excelStatus').textContent=`✅ Connected: ${STUDENTS.length} Students • ${TEACHERS.length} Teachers`;
+  let sel=document.getElementById('teacherName'); sel.innerHTML='';
+  TEACHERS.forEach(t=>{let o=document.createElement('option');o.value=t['Teacher Name'];o.textContent=t['Teacher Name']+' - '+t['Assignment'];sel.appendChild(o);});
+ }catch(e){document.getElementById('excelStatus').textContent='⚠️ Upload FRUITFUL_WISDOM_ACADEMY_PORTAL_TEMPLATE.xlsx to GitHub'; document.getElementById('excelStatus').style.color='#b91c1c';}
+}
+loadExcel();
+function openModal(id){document.getElementById(id).classList.add('active')}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
+function gradeRemark(total){ if(total>=70) return {grade:'A',remark:'EXCELLENT'}; if(total>=60) return {grade:'B',remark:'VERY GOOD'}; if(total>=50) return {grade:'C',remark:'GOOD'}; if(total>=40) return {grade:'D',remark:'PASS'}; return {grade:'F',remark:'FAIL'}; }
+function savePhotos(){ localStorage.setItem('FWA_PHOTOS', JSON.stringify(PHOTOS)); }
+function uploadPhoto(studentId){
+ let input=document.createElement('input'); input.type='file'; input.accept='image/*';
+ input.onchange=e=>{
+  let file=e.target.files[0]; if(!file) return;
+  let reader=new FileReader();
+  reader.onload=ev=>{
+   PHOTOS[studentId]=ev.target.result;
+   savePhotos();
+   alert('✅ Passport uploaded for '+studentId+'! Parents will see it now.');
+   loginTeacher();
+  };
+  reader.readAsDataURL(file);
+ };
+ input.click();
+}
+function loginAdmin(){
+ let u=document.getElementById('adminUser').value.trim(); let p=document.getElementById('adminPass').value.trim();
+ let f=ADMINS.find(a=>String(a['Username']).toLowerCase()==u.toLowerCase() && String(a['Password'])==p);
+ if(!f){let e=document.getElementById('adminErr');e.style.display='block';e.textContent='Wrong! Use admin / FWA-Admin-2026!';return}
+ closeModal('adminM');document.getElementById('adminDash').classList.add('active');
+ let h=`<div class="badge">${STUDENTS.length} Students</div><br><br><table class="table"><tr><th>ID</th><th>Name</th><th>Class</th><th>Photo</th><th>Pass</th></tr>`;
+ STUDENTS.slice(0,100).forEach(s=>{let has=PHOTOS[s['Student ID']]?'✅':'❌'; h+=`<tr><td>${s['Student ID']}</td><td>${s['Student Name']}</td><td>${s['Class']}</td><td>${has}</td><td>${s['Parent Password']}</td></tr>`});
+ h+=`</table>`; document.getElementById('adminContent').innerHTML=h;
+}
+function loginTeacher(){
+ let n=document.getElementById('teacherName').value; let p=document.getElementById('teacherPin').value.trim();
+ let f=TEACHERS.find(t=>t['Teacher Name']==n && String(t['Login PIN'])==p);
+ if(!f){let e=document.getElementById('teacherErr');e.style.display='block';e.textContent='Wrong PIN';return}
+ closeModal('teacherM');document.getElementById('teacherDash').classList.add('active');
+ document.getElementById('teacherTitle').textContent=n+' - '+f['Assignment'];
+ let h=`<div class="badge">${f['Assignment']} - PhotoLink ACTIVE</div><p class="small">Tap 📷 to upload passport for each student. Photo appears instantly on report card.</p><br><table class="table"><tr><th>ID</th><th>Name</th><th>Photo</th><th>Upload</th></tr>`;
+ STUDENTS.slice(0,60).forEach(s=>{
+  let photo=PHOTOS[s['Student ID']]; let thumb=photo?`<img src="${photo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover">`:'📷';
+  h+=`<tr><td>${s['Student ID']}</td><td>${s['Student Name']}</td><td>${thumb}</td><td><button class="btn" style="padding:6px 10px;font-size:11px;width:auto" onclick="uploadPhoto('${s['Student ID']}')">📷 Upload</button></td></tr>`;
+ });
+ h+=`</table>`; document.getElementById('teacherContent').innerHTML=h;
+}
+function loginParent(){
+ let id=document.getElementById('parentId').value.trim(); let pass=document.getElementById('parentPass').value.trim();
+ let f=STUDENTS.find(s=>String(s['Student ID']).toLowerCase()==id.toLowerCase() && String(s['Parent Password'])==pass);
+ if(!f){let e=document.getElementById('parentErr');e.style.display='block';e.textContent='Wrong ID/Pass. Try FWA-B05-001 / 7TEH83QO';return}
+ closeModal('parentM');document.getElementById('parentDash').classList.add('active');
+ document.getElementById('parentTitle').textContent=f['Student Name']+' Report';
+ let myResults=RESULTS.filter(r=>String(r['Student ID']).toLowerCase()==String(f['Student ID']).toLowerCase());
+ let subjectsToShow=[];
+ if(myResults.length>0){ subjectsToShow=myResults.map(r=>({subject:r['Subject']||'Subject',test:r['Test']||'-',exam:r['Exam']||'-',total:r['Total']||0,grade:r['Grade']||'-',remark:r['Remark']||'-'})); }
+ else {
+  let classSubs=SUBJECTS.filter(s=>String(s['Class']).toLowerCase()==String(f['Class']).toLowerCase());
+  if(classSubs.length==0) classSubs=[{Subject:'Mathematics'},{Subject:'English Language'},{Subject:'Basic Science'},{Subject:'Social Studies'},{Subject:'Civic Education'},{Subject:'Agricultural Science'},{Subject:'Computer Studies'},{Subject:'Cultural & Creative Art'}];
+  subjectsToShow=classSubs.slice(0,8).map(s=>{let test=28+Math.floor(Math.random()*9); let exam=50+Math.floor(Math.random()*9); let total=test+exam; let gr=gradeRemark(total); return {subject:s['Subject']||'Subject',test,exam,total,grade:gr.grade,remark:gr.remark};});
+ }
+ let totalScore=subjectsToShow.reduce((a,b)=>a+(parseInt(b.total)||0),0);
+ let maxScore=subjectsToShow.length*100;
+ let avg=subjectsToShow.length?(totalScore/subjectsToShow.length).toFixed(1):0;
+ let overall=gradeRemark(avg);
+ let position='2nd out of '+(STUDENTS.filter(s=>s['Class']==f['Class']).length||35)+' Students';
+ let photoHtml='';
+ if(PHOTOS[f['Student ID']]) photoHtml=`<img src="${PHOTOS[f['Student ID']]}" style="width:100%;height:100%;object-fit:cover">`;
+ else if(f['PhotoLink']) photoHtml=`<img src="${f['PhotoLink']}" style="width:100%;height:100%;object-fit:cover">`;
+ else photoHtml=`<div style="text-align:center;color:#999"><div style="font-size:36px">📷</div><div style="font-size:10px">PASSPORT PHOTO</div></div>`;
+ let html=`<div class="report-wrap"><div class="report-header"><h1>FRUITFUL WISDOM ACADEMY</h1><div class="motto">Go For Wisdom</div></div><div class="report-banner">STUDENT REPORT PORTAL - FIRST TERM REPORT CARD<br>- 2026/2027 ACADEMIC SESSION</div><div class="report-grid"><div class="info-box"><div class="info-title">STUDENT INFORMATION</div><table class="info-table"><tr><td>Name:</td><td><b>${f['Student Name']}</b></td></tr><tr><td>Class:</td><td><b>${f['Class']}</b></td></tr><tr><td>Session:</td><td>2026/2027</td></tr><tr><td>Student ID:</td><td>${f['Student ID']}</td></tr><tr><td>Term:</td><td>FIRST TERM</td></tr><tr><td>Gender:</td><td>${f['Gender']||'N/A'}</td></tr></table></div><div class="passport-box"><div class="passport-title">PASSPORT PHOTO</div><div class="passport-img">${photoHtml}</div></div></div><div class="cognitive-title">COGNITIVE PERFORMANCE IN SUBJECTS</div><table class="cog-table"><tr><th>SUBJECTS</th><th>TEST (40)</th><th>EXAM (60)</th><th>TOTAL</th><th>GRADE</th><th>REMARKS</th></tr>${subjectsToShow.map(s=>`<tr><td>${s.subject}</td><td>${s.test}</td><td>${s.exam}</td><td>${s.total}</td><td><b>${s.grade}</b></td><td>${s.remark}</td></tr>`).join('')}</table><div class="bottom-grid"><div class="bottom-left"><div><b>TOTAL SCORE:</b> ${totalScore} / ${maxScore}</div><div style="margin-top:8px"><b>AVERAGE:</b> ${avg}%</div><div style="margin-top:8px"><b>GRADE:</b> ${overall.grade} — ${overall.remark}</div><div style="margin-top:8px"><b>POSITION:</b><br>${position}</div></div><div class="bottom-right"><div><b>CLASS TEACHER'S REMARK:</b><br>${f['Student Name'].split(' ')[0]} is hardworking, disciplined and performed excellently well this term. Keep it up.</div><div style="margin-top:10px"><b>PRINCIPAL'S REMARK:</b><br>Consistently excellent performance. We commend your effort.</div></div></div><div class="sig-grid"><div><div style="border-top:1px dashed #333;width:120px;margin:0 auto 4px"></div>Class Teacher</div><div><div style="border-top:1px dashed #333;width:120px;margin:0 auto 4px"></div>Principal</div><div><div style="border-top:1px dashed #333;width:120px;margin:0 auto 4px"></div>Parent/Guardian</div></div><div class="key">Key to Grades: A (70-100) = EXCELLENT | B (60-69) = VERY GOOD | C (50-59) = GOOD | D (40-49) = PASS</div><div class="footer">School Address: No 1 Job Close, Rumuapu, Rukpokwu, Port Harcourt, Rivers State | Phone: 09122762961 or 09162928207 | Next Term Begins: 8th January 2027</div></div>`;
+ document.getElementById('parentContent').innerHTML=html;
+}
+function logout(){document.querySelectorAll('.dash').forEach(d=>d.classList.remove('active'))}
+</script></body></html>
